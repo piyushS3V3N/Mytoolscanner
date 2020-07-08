@@ -1,10 +1,29 @@
 #!/usr/bin/env python3
 import os
-from pyfiglet import Figlet
+import subprocess
+from pyfiglet import figlet_format 
 import importlib
 import sys
+import cmd
+command=[]
+class CmdParse(cmd.Cmd):
+    prompt="\033[1;31m[s3v3n_k17 ;)]~# \033[1;00m"
+    def do_listall(seld,line):
+        print(command)
+    def help_me(self):
+        print("\n"+" "*15 + "[HELP]")
+        print(" "+"="*36+"\n")
+        print(" [1]\033[94m[discover]\033[00m \n [?] Discover Devices On your network \n "+"-"*35)
+        print(" [2]\033[94m[portscan]\033[00m \n [?] Run a Port Scan On Specific Target \n "+"-"*35)
+        print(" [3]\033[94m[ncconnect]\033[00m \n [?] Establishes a netcat connection \n "+"-"*35)
+        print(" [4]\033[94m[nclisten]\033[00m \n [?] Starts a netcat listener \n "+"-"*35)
+        print(" [5]\033[94m[exit]\033[00m \n [?] Exit out of program \n "+"-"*35)
+
+    def default(self, line):
+        commandline(line)
+        command.append(line)
 def networkscanner():
-    #os.system("python3 ./tool/pingsweeper.py")
+    #subprocess.call("python3 ./tool/pingsweeper.py")
     sys.path.insert(1, 'tool/')
     import discover
     discover.run()
@@ -20,55 +39,46 @@ def ncconnect():
     sys.path.insert(1,'tool/')
     import netcat
     netcat.connect()
-def commandline():
-    while True :
-        opt = (input("\033[1;31m[s3v3n_k17 ;)]~# \033[1;00m"))
-        if (opt == "discover"):
-            networkscanner()
-        elif (opt == "portscan"):
-            portscanner()
-        elif (opt == "exit" or opt == "Exit" or opt == "quit"):
-            print("[;)]Exiting Now.....")
-            break
-        elif(opt ==  "clear"):
-            os.system('clear')
-            banner()
-        elif(opt ==  "ls"):
-            os.system("ls")
-        elif(opt=="help"):
-            banner()
-        elif(opt == "shell" or opt == "Shell"):
-            os.system("sh")
-        elif(opt == "ncconnect"):
-            ncconnect()
-        elif(opt == "nclisten"):
-            nclisten()
-        else:
-            print("Invalid Input")
+def commandline(opt):
+    #opt = (input("\033[1;31m[s3v3n_k17 ;)]~# \033[1;00m"))
+    if (opt == "discover"):
+        networkscanner()
+    elif (opt == "portscan"):
+        portscanner()
+    elif (opt == "exit" or opt == "Exit" or opt == "quit"):
+        print("[;)]Exiting Now.....")
+        exit()
+    elif(opt ==  "clear"):
+        subprocess.call('clear')
+        banner()
+    elif(opt ==  "ls"):
+        subprocess.call("ls")
+    elif(opt=="help"):
+        banner()
+    elif(opt == "ncconnect"):
+        ncconnect()
+    elif(opt == "nclisten"):
+        nclisten()
+    else:
+        try:
+            subprocess.call(opt)
+        except:
+            print ("Incorrect Command")
+    #else:
+    #    print("Invalid Input")
+    opt=" "
 def banner():
     t2 = "  =================================================================== "
-    b2 = "  ||          \033[1;92mS3V3N_K17\033[1;00m           ||"
-    cust_fig = Figlet(font = 'slant')
-    print(cust_fig.renderText("S3V3N_K17"))
-    print(t2)
-    print(b2)
-    print(t2)
-    print(""*100)
-    print("To use this tool simply type in the command and to exit type exit")
-    print(t2)
-    print("  Basic Tools")
-    print("  Network Discovery (command: discover)")
-    print("  Port Scanner (command: portscan)")
-    print("  Exit ")
-    print("  Shell (command: sh)")
-    print("  Netcat Connection(command: ncconnect (to connect to a remote host))") 
-    print("  Netcat Listener (command: nclisten(to start a listener on a port))")
-    print(t2)
+    b2 = " "*28 + "S3V3N_K17" 
+    cust_fig = figlet_format(b2,font='digital' )
+    print("\033[92m"+cust_fig+"\033[00m")
+    #print(t2)
 def nmapscanner():
-    os.system('python3 nmapscanner.py')
+    subprocess.call('python3 nmapscanner.py')
 if __name__ == "__main__":
     rows, columns = os.popen('stty size', 'r').read().split()
     rows = int(rows)
-    os.system('clear')
+    subprocess.call('clear')
     banner()
-    commandline()
+    CmdParse().cmdloop()
+    #commandline()
