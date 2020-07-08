@@ -7,6 +7,11 @@ def Main():
 
     if platform == 'Linux' or platform == 'linux':
         print('Linux System Detected !! \n Running Scripts Now......')
+        try:
+            import pyfiglet
+        except ImportError as e:
+            print("Installing requirements")
+            os.system("pip install -r requirements.txt")
         time.sleep(2)
         os.system("clear")
         os.system("python3 sysfil/linux");
